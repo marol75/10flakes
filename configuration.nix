@@ -7,15 +7,13 @@
 {
   imports = [
      # Include the results of the hardware scan.
-      ./hardware-configuration.nix
-    # Pay attention to if you want disk-config.nix or the following for luks
+    ./hardware-configuration.nix
     ./disk-config.nix
     ./users.nix
     ./networking.nix
     ./boot.nix
     ./zram.nix
-    ./impermanenceLUKS.nix
-    # ./impermanence.nix
+    ./impermanence.nix
   ];
 
   # After formatting with disko, the following is more robust for LUKS
@@ -26,6 +24,21 @@
        preLVM = true;
      };
    };
+
+  # This complements using zram, putting /tmp on RAM
+    boot = {
+    tmp = {
+      useTmpfs = true;
+      tmpfsSize = "50%";
+    };
+  };
+
+  # Enable autoScrub for btrfs
+    services.btrfs.autoScrub = {
+    enable = true;
+    interval = "weekly";
+    fileSystems = ["/"];
+  };
 
   # Custom Options
   custom = {
@@ -49,16 +62,6 @@
   # networking.proxy.default = "http://user:password@proxy:port/";
   # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
 
-  # Select internationalisation properties.
-  # i18n.defaultLocale = "en_US.UTF-8";
-  # console = {
-  #   font = "Lat2-Terminus16";
-  #   keyMap = "us";
-  #   useXkbConfig = true; # use xkb.options in tty.
-  # };
-
-  # programs.dconf.enable = true;
-
   # Enable the X11 windowing system.
   services.xserver = {
 	enable = true;
@@ -73,9 +76,7 @@
   };
   
   security.pam.services.i3lock.enable = true;
-  services.displayManager.sddm = {
-	enable = true;
-	};
+  services.displayManager.sddm.enable = true;
 
   programs.i3lock.enable = true;
 
@@ -85,8 +86,6 @@
 	options = "grp:alt_shift_toggle";
   };
 
-  # services.xserver.xkb.options = "eurosign:e,caps:escape";
- 
   # Last version that supports Kepler GPUs
   # hardware.nvidia.package = config.boot.kernelPackages.nvidiaPackages.legacy_470;
 
@@ -110,7 +109,7 @@
   users.users.marol = {
      isNormalUser = true;
      initialPassword = "catmeowingoutside";
-     extraGroups = [ "networkmanager" "wheel" "audio" "video" ]; # Enable ‘sudo’ for the user.
+     extraGroups = [ "networkmanager" "sudo" "wheel" "audio" "video" ]; # Enable ‘sudo’ for the user.
      packages = with pkgs; [
        tree
      ];
@@ -156,14 +155,13 @@ environment.etc."firefox/policies/policies.json".target = "librewolf/policies/po
   };
 
   # Install and Configure zsh
-    
   programs.zsh = {
     enable = true;
     ohMyZsh = {
       enable = true;
       plugins = [
 	"git"
-        "z"
+    "z"
       ];
     }; 
     enableCompletion = true;
@@ -176,8 +174,7 @@ environment.etc."firefox/policies/policies.json".target = "librewolf/policies/po
   nixpkgs.config = {
     allowUnfree = true;
   };
- 
-  programs.zoom-us.enable = true;
+ programs.zoom-us.enable = true;
 
   # List packages installed in system profile.
   # You can use https://search.nixos.org/ to find more packages (and options).
