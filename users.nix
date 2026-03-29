@@ -11,12 +11,10 @@
 
   config = lib.mkIf config.custom.users.enable {
     users.users = {
-      # Change me!
       marol = {
         homeMode = "755";
         isNormalUser = true;
-        # Change me!
-        # description = "marol75";
+        description = "marol75";
         # Change me! generate with `mkpasswd -m SHA-512 -s`
         # initialHashedPassword = "$6$knlskdQSQp4le3uiy..3$gAUAugTxAeHUpWKf6iwlkasdjf'lkajWNZRTtjbJ4X0PIjkIQOCcLcimOJe4Y0";
 
