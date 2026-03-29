@@ -10,7 +10,6 @@
 
   outputs = inputs @ {nixpkgs, ...}: {
     nixosConfigurations = {
-      # Change me! Change `nixos` to chosen hostname
       marol = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         modules = [
